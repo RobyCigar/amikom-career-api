@@ -19,21 +19,22 @@ npm run dev
 
 ### Penggunaan
 
-
 ```
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:3000/api/lowongan
 ```
 
-### Endpoint 
+### Endpoint
 
 BASE = http://localhost:3000/api/
 
 Mendapatkan Lowongan
 
 GET
+
 ```
 {BASE}/lowongan
 ```
+
 ```
 {BASE}/lowongan?page=3
 ```
@@ -41,7 +42,7 @@ GET
 Mendapatkan Detail Lowongan
 
 GET
+
 ```
 {BASE}/lowongan/{SLUG}
 ```
-

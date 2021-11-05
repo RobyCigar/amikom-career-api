@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --file"
+    "lint": "prettier -w . && next lint",
+    "prepare": "husky install"
   },
   "dependencies": {
     "axios": "^0.24.0",
@@ -16,11 +17,19 @@
     "react": "17.0.2",
     "react-dom": "17.0.2"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "prettier -w . && next lint",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
   "devDependencies": {
     "@types/react": "^17.0.33",
     "eslint": "7.32.0",
     "eslint-config-next": "12.0.1",
     "eslint-config-prettier": "^8.3.0",
+    "husky": "^7.0.4",
+    "prettier": "^2.4.1",
     "typescript": "^4.4.4"
   }
 }
