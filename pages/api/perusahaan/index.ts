@@ -52,15 +52,13 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
 
     // get company name
     $(`div.company-desc>a>h2`).each((i, el) => {
-        companyName[i] = $(el).text();
+      companyName[i] = $(el).text();
     });
-
 
     // get description
     $(`div[class="desc-list"]>li`).each((i, el) => {
-                                                                                                      $(el).text();
-    })
-
+      $(el).text();
+    });
 
     // get the title of jobs
     title = $("h2").text().split("\n");
@@ -161,7 +159,9 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
     if (arrResult.length === 0) {
       res.status(404).json({ error: "No data found!" });
     } else {
-      res.status(200).json({ status: 200, message: "success", data: arrResult,});
+      res
+        .status(200)
+        .json({ status: 200, message: "success", data: arrResult });
     }
   } catch (e) {
     console.log(e);

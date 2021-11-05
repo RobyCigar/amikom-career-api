@@ -1,6 +1,7 @@
 {
   "extends": ["next/core-web-vitals", "prettier"],
   "rules": {
-    "@next/next/link-passhref": "off"
+    "@next/next/link-passhref": "off",
+    "import/no-anonymous-default-export": "off"
   }
 }

@@ -79,17 +79,17 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
   const picture: string = $(`div[class="thumb"]>img`).attr("src");
 
   // get job role
-  const jobRole: string = $(`div[class="company-desc"]>h2`).text().split("\n")[0];
+  const jobRole: string = $(`div[class="company-desc"]>h2`)
+    .text()
+    .split("\n")[0];
 
   // get total vacancies
   const totalVacancies: string = $(`div[class="total-vacancies"]`).text();
 
-
   // get company description
   const companyDescription: string = $(`div[class="company-desc"]>li`).text();
 
-  console.log("here", companyDescription)
-
+  console.log("here", companyDescription);
 
   const result = {
     jobRole,
@@ -101,5 +101,5 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
   };
   return res
     .status(200)
-    .json({data: result, status: 200, message: "success"});
+    .json({ data: result, status: 200, message: "success" });
 }

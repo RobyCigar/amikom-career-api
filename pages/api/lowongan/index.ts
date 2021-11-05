@@ -155,7 +155,9 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
     if (arrResult.length === 0) {
       res.status(404).json({ error: "No data found!" });
     } else {
-      res.status(200).json({ status: 200, message: "success", data: arrResult,});
+      res
+        .status(200)
+        .json({ status: 200, message: "success", data: arrResult });
     }
   } catch (e) {
     console.log(e);
