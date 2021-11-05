@@ -1,4 +1,4 @@
-import Link from    "next/link";
+import Link from "next/link";
 
 export default function Index() {
   return (
@@ -9,11 +9,11 @@ export default function Index() {
         </h1>
         <table cellSpacing="20">
           <tr>
-            <td>API Endpoint</td>
+            <td>Root Endpoint</td>
             <td>
-              <Link href="api/lowongan">
-                <span>{"{BASE_URL}"}/api/lowongan</span>
-              </Link>
+              <a href="api/" target="_blank">
+                <span>{"{BASE_URL}"}/api/</span>
+              </a>
             </td>
           </tr>
           <tr>

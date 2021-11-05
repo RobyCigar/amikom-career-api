@@ -72,7 +72,34 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
     }
   });
 
+  // get image banner
+  const banner: string = $(`div[class="banner-cover"]>img`).attr("src");
+
+  // get profile image
+  const picture: string = $(`div[class="thumb"]>img`).attr("src");
+
+  // get job role
+  const jobRole: string = $(`div[class="company-desc"]>h2`).text().split("\n")[0];
+
+  // get total vacancies
+  const totalVacancies: string = $(`div[class="total-vacancies"]`).text();
+
+
+  // get company description
+  const companyDescription: string = $(`div[class="company-desc"]>li`).text();
+
+  console.log("here", companyDescription)
+
+
+  const result = {
+    jobRole,
+    banner,
+    picture,
+    jurusan,
+    about,
+    requirements,
+  };
   return res
     .status(200)
-    .json({ jurusan: jurusan, requirements: requirements, about: about });
+    .json({data: result, status: 200, message: "success"});
 }

@@ -21,10 +21,11 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
   let title: string[];
   let jobType: string[] | void[];
   let company: string[] | string;
+  let companyName: any = [];
   let slug: string[] | string;
   let requirements: string[] | string;
   let date: string[] | string;
-  let url: string = `https://career.amikom.ac.id/telusuri/lowongan?page=${page}`;
+  let url: string = `https://career.amikom.ac.id/perusahaan?page=${page}`;
 
   try {
     // PROD
@@ -49,12 +50,17 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
 
     const $ = cheerio.load(getData.data);
 
-    // get image url
-    const imgUrl: any = $("div.thumb>img")
-      .map((_i, x) => {
-        return $(x).attr("src");
-      })
-      .toArray();
+    // get company name
+    $(`div.company-desc>a>h2`).each((i, el) => {
+        companyName[i] = $(el).text();
+    });
+
+
+    // get description
+    $(`div[class="desc-list"]>li`).each((i, el) => {
+                                                                                                      $(el).text();
+    })
+
 
     // get the title of jobs
     title = $("h2").text().split("\n");
