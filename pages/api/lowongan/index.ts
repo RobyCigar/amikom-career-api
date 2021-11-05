@@ -17,7 +17,7 @@ interface JobI {
 }
 
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function GET(req: NextApiRequest, res: NextApiResponse) {
 	let { page } = req.query;
 	let arrResult: JobI[] = [];
 	let title: string[];

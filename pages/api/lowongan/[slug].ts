@@ -4,7 +4,7 @@ import axios from "axios";
 import config from "../../../utils/config";
 
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function GET(req: NextApiRequest, res: NextApiResponse) {
     const { slug } = req.query;
     let arrResult: any = [];
     let requirements: any = [];

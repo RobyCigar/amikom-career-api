@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Index() {
   return (
     <main style={styles.container}>
@@ -9,7 +11,7 @@ export default function Index() {
             API Endpoint
             </td>
             <td>
-              <a href="/api/lowongan" target="_blank">{"{BASE_URL}"}/api/lowongan</a>
+              <Link href="api/lowongan"><span>{"{BASE_URL}"}/api/lowongan</span></Link>
             </td>
           </tr>
           <tr>
@@ -17,8 +19,7 @@ export default function Index() {
               Dokumentasi
             </td>
             <td>
-              <a href="https://github.com/RobyCigar/amikom-career-api">https://github.com/RobyCigar/amikom-career-api</a>
-
+              <Link href="https://github.com/RobyCigar/amikom-career-api">https://github.com/RobyCigar/amikom-career-api</Link>
             </td>
           </tr>
           <tr>
@@ -26,7 +27,7 @@ export default function Index() {
               Created by
             </td>
             <td>
-        <a href="https://github.com/RobyCigar" target="_blank">https://github.com/RobyCigar</a>
+              <Link href="https://github.com/RobyCigar" passHref={true}>https://github.com/RobyCigar</Link>
 
             </td>
           </tr>
