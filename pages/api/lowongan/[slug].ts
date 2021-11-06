@@ -35,7 +35,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
 
   const $ = cheerio.load(getData.data);
 
-  const test = $(`ul[class="company-info bullet-style"]`);
+  const test = $('ul[class="company-info bullet-style"]');
   test.each((i, el) => {
     if (i == 0) {
       // get persyaratan
@@ -73,21 +73,21 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
   });
 
   // get image banner
-  const banner: string = $(`div[class="banner-cover"]>img`).attr("src");
+  const banner: string = $('div[class="banner-cover"]>img').attr("src");
 
   // get profile image
-  const picture: string = $(`div[class="thumb"]>img`).attr("src");
+  const picture: string = $('div[class="thumb"]>img').attr("src");
 
   // get job role
-  const jobRole: string = $(`div[class="company-desc"]>h2`)
+  const jobRole: string = $('div[class="company-desc"]>h2')
     .text()
     .split("\n")[0];
 
   // get total vacancies
-  const totalVacancies: string = $(`div[class="total-vacancies"]`).text();
+  const totalVacancies: string = $('div[class="total-vacancies"]').text();
 
   // get company description
-  const companyDescription: string = $(`div[class="company-desc"]>li`).text();
+  const companyDescription: string = $('div[class="company-desc"]>li').text();
 
   console.log("here", companyDescription);
 

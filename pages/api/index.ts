@@ -1,7 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import config from "../../utils/config";
+
+const { BASEAPI } = config;
 
 export default async (_req: NextApiRequest, res: NextApiResponse) => {
   res.status(200).json({
-    example: "Hello World",
+    example: BASEAPI,
   });
 };

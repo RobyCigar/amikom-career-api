@@ -18,6 +18,7 @@ interface JobI {
 export default async function GET(req: NextApiRequest, res: NextApiResponse) {
   let { page } = req.query;
   let arrResult: JobI[] = [];
+  let imgUrl: string[] = [];
   let title: string[];
   let jobType: string[] | void[];
   let company: string[] | string;
@@ -51,12 +52,12 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
     const $ = cheerio.load(getData.data);
 
     // get company name
-    $(`div.company-desc>a>h2`).each((i, el) => {
+    $("div.company-desc>a>h2").each((i, el) => {
       companyName[i] = $(el).text();
     });
 
     // get description
-    $(`div[class="desc-list"]>li`).each((i, el) => {
+    $('div[class="desc-list"]>li').each((i, el) => {
       $(el).text();
     });
 
@@ -84,8 +85,10 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
       };
     });
 
+    console.log("arrRes", arrResult);
+
     // get the job types
-    jobType = $(`div[class="badge badge-light"]`).text().split(" Waktu");
+    jobType = $('div[class="badge badge-light"]').text().split(" Waktu");
     jobType = jobType.filter((el) => (el ? el + "Waktu" : false));
     jobType.forEach((el, i) => {
       arrResult[i] = {
@@ -95,7 +98,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
     });
 
     // get company name
-    company = $(`a[class="company-name"]`).text();
+    company = $('a[class="company-name"]').text();
     company = company.split("\n");
     company = company.map((el) => el.trim());
     company = company.filter((el) => (el ? el : false));
@@ -107,7 +110,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
     });
 
     // get slug
-    slug = $(`a[class="detail-link"]`)
+    slug = $('a[class="detail-link"]')
       .map((_i, x) => $(x).attr("href"))
       .toArray();
     slug = slug.map((el) => el.split("/")[5]);
@@ -123,7 +126,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
     let currIndex: number = 0;
     let tmp: string;
 
-    requirements = $(`ul[class=desc-list]`).text();
+    requirements = $("ul[class=desc-list]").text();
     requirements = requirements.split("\n");
     requirements = requirements.map((el) => el.trim());
     requirements = requirements.filter((el) => (el ? el : false));
@@ -142,7 +145,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
     });
 
     // get date
-    date = $(`div[class=list-wrapper]`).text();
+    date = $("div[class=list-wrapper]").text();
     date = date.split("\n");
     date = date.map((el) => el.trim());
     date = date.filter((el) => (el ? el : false));
