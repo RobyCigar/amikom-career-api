@@ -1,6 +1,9 @@
 import Link from "next/link";
+import config from "../utils/config";
+
 
 export default function Index() {
+  const { BASEAPI } = config;
   return (
     <main style={styles.container}>
       <div>
@@ -11,8 +14,8 @@ export default function Index() {
           <tr>
             <td>Root Endpoint</td>
             <td>
-              <a href="api/" target="_blank">
-                <span>{"{BASE_URL}"}/api/</span>
+              <a href={BASEAPI} target="_blank">
+                <span>{BASEAPI}</span>
               </a>
             </td>
           </tr>

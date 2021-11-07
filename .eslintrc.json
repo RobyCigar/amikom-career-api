@@ -1,14 +1,16 @@
 {
   "extends": [
-    "next/core-web-vitals",
+    "next",
     "prettier",
+    "next/core-web-vitals",
     "eslint-config-prettier",
     "eslint-config-prettier"
   ],
   "rules": {
     "@next/next/link-passhref": "off",
+    "react/jsx-no-target-blank": "off",
     "import/no-anonymous-default-export": "off",
-    "semi": ["error", "always"],
+    "semi": ["warn", "always"],
     "indent": ["error", 2]
   }
 }

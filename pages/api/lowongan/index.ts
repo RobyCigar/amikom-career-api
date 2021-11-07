@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios, { AxiosResponse } from "axios";
 import cheerio from "cheerio";
+import config from "../../../utils/config";
 
 interface JobI {
   title: string;
@@ -16,6 +17,7 @@ interface JobI {
 }
 
 export default async function GET(req: NextApiRequest, res: NextApiResponse) {
+  const { BASE } = config;
   let { page } = req.query;
   let arrResult: JobI[] = [];
   let title: string[];
@@ -25,7 +27,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
 
   let requirements: string[] | string;
   let date: string[] | string;
-  let url: string = `https://career.amikom.ac.id/telusuri/lowongan?page=${page}`;
+  let url: string = `${BASE}/telusuri/lowongan?page=${page}`;
 
   try {
     // PROD
@@ -112,7 +114,6 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
       arrResult[i] = {
         ...arrResult[i],
         slug: el,
-        requirements: [],
       };
     });
 

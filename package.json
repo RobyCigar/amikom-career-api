@@ -8,8 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "lint-staged": "npx lint-staged",
-    "prepare": "husky install",
-    "test": "eslint --fix \"**/*.{js,jsx,ts,tsx}\""
+    "prepare": "husky install"
   },
   "dependencies": {
     "axios": "^0.24.0",

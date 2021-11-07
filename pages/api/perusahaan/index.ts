@@ -1,13 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios, { AxiosResponse } from "axios";
+import config  from "../../../utils/config";
 import cheerio from "cheerio";
 
 interface JobI {
   title: string;
   image: string;
   type: string;
+  jumlahLowongan: number[];
   company: string;
+  field: string;
   slug: string;
+  description: any;
   requirements: string[];
   uploadedAt: string;
   validUntil: string;
@@ -16,20 +20,24 @@ interface JobI {
 }
 
 export default async function GET(req: NextApiRequest, res: NextApiResponse) {
+  const { BASE } = config;
   let { page } = req.query;
   let arrResult: JobI[] = [];
   let imgUrl: string[] = [];
   let title: string[];
+  let field: string[];
   let jobType: string[] | void[];
   let company: string[] | string;
+  let jumlahLowongan: number[] = [];
   let companyName: any = [];
-  let slug: string[] | string;
+  let companyStatus: string[] = [];
+  let description: string[] = [];
+  let slug: string[] = [];
   let requirements: string[] | string;
   let date: string[] | string;
-  let url: string = `https://career.amikom.ac.id/perusahaan?page=${page}`;
+  let url: string = `${BASE}/perusahaan?page=${page}`;
 
   try {
-    // PROD
     const getData: any = await axios
       .get<AxiosResponse>(url)
       .catch(function (error) {
@@ -51,113 +59,39 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
 
     const $ = cheerio.load(getData.data);
 
-    // get company name
-    $("div.company-desc>a>h2").each((i, el) => {
-      companyName[i] = $(el).text();
+    // get company name and slug
+    let test = $("div.company-desc>a").each(function (
+      index: number,
+      element: any
+    ) {
+      slug.push($(this).attr("href"));
+      companyName.push($(this).text().replace(/\s\s+/gm, ""));
+    });
+    
+    // get company status
+    $("div[class=\"badge badge-light\"]").each(function (
+      index: number,
+      element: any
+    ) {
+      jumlahLowongan.push(parseInt($(this).next().find("h2").text()));
+      companyStatus.push($(this).text().replace(/\s\s+/gm, ""));
     });
 
-    // get description
-    $('div[class="desc-list"]>li').each((i, el) => {
-      $(el).text();
-    });
 
-    // get the title of jobs
-    title = $("h2").text().split("\n");
-    title = title
-      .filter((_el, i) => {
-        return i % 2 ? true : false;
-      })
-      .map((el, _i) => {
-        return el.trim();
-      });
-    title.forEach((el, i) => {
-      arrResult[i] = {
-        title: el,
-        image: imgUrl[i],
-        type: "",
-        company: "",
-        slug: "",
-        requirements: [],
-        uploadedAt: "",
-        validUntil: "",
-        numOfViews: "",
-        location: "",
-      };
-    });
-
-    console.log("arrRes", arrResult);
-
-    // get the job types
-    jobType = $('div[class="badge badge-light"]').text().split(" Waktu");
-    jobType = jobType.filter((el) => (el ? el + "Waktu" : false));
-    jobType.forEach((el, i) => {
-      arrResult[i] = {
-        ...arrResult[i],
-        type: `${el} Waktu`,
-      };
-    });
-
-    // get company name
-    company = $('a[class="company-name"]').text();
-    company = company.split("\n");
-    company = company.map((el) => el.trim());
-    company = company.filter((el) => (el ? el : false));
-    company.forEach((el, i) => {
-      arrResult[i] = {
-        ...arrResult[i],
-        company: el,
-      };
-    });
-
-    // get slug
-    slug = $('a[class="detail-link"]')
-      .map((_i, x) => $(x).attr("href"))
-      .toArray();
-    slug = slug.map((el) => el.split("/")[5]);
-    slug.forEach((el, i) => {
-      arrResult[i] = {
-        ...arrResult[i],
-        slug: el,
-        requirements: [],
-      };
-    });
-
-    // get requirements like requirement, location, salary
-    let currIndex: number = 0;
-    let tmp: string;
-
-    requirements = $("ul[class=desc-list]").text();
-    requirements = requirements.split("\n");
-    requirements = requirements.map((el) => el.trim());
-    requirements = requirements.filter((el) => (el ? el : false));
-
-    requirements.forEach((el, _i) => {
-      if (el === "Masuk untuk melihat gaji") {
-        currIndex++;
-        return;
-      }
-      arrResult[currIndex].requirements.push(el);
-    });
-
-    arrResult.forEach((el, i) => {
-      tmp = el.requirements.pop();
-      arrResult[i] = { ...arrResult[i], location: tmp };
-    });
-
-    // get date
-    date = $("div[class=list-wrapper]").text();
-    date = date.split("\n");
-    date = date.map((el) => el.trim());
-    date = date.filter((el) => (el ? el : false));
-
-    arrResult.forEach((_el, i) => {
-      arrResult[i] = {
-        ...arrResult[i],
-        uploadedAt: date[i],
-        validUntil: date[i + 1],
-        numOfViews: date[i + 2],
-      };
-    });
+    description = $("div.company-profile").find("p").map(function (
+      index: number,
+      element: any
+    ) {
+      return $(this).text().replace(/\s\s+/gm, " ");
+    }).toArray();
+    
+    arrResult = {
+      description,
+      jumlahLowongan,
+      slug,
+      companyName,
+      companyStatus,
+    };
 
     if (arrResult.length === 0) {
       res.status(404).json({ error: "No data found!" });
