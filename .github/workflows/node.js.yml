@@ -28,4 +28,3 @@ jobs:
         node-version: '14'
         cache: 'pnpm'
     - run: pnpm install
-    - run: pnpm test
