@@ -1,40 +1,26 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios, { AxiosResponse } from "axios";
-import config  from "../../../utils/config";
+import config from "../../../utils/config";
 import cheerio from "cheerio";
 
 interface JobI {
-  title: string;
   image: string;
   type: string;
-  jumlahLowongan: number[];
-  company: string;
+  jumlahLowongan: number;
+  companyName: any;
+  companyStatus: any;
   field: string;
   slug: string;
   description: any;
-  requirements: string[];
-  uploadedAt: string;
-  validUntil: string;
-  numOfViews: string;
   location: string;
+  website: string;
 }
 
 export default async function GET(req: NextApiRequest, res: NextApiResponse) {
   const { BASE } = config;
   let { page } = req.query;
   let arrResult: JobI[] = [];
-  let imgUrl: string[] = [];
-  let title: string[];
-  let field: string[];
-  let jobType: string[] | void[];
-  let company: string[] | string;
-  let jumlahLowongan: number[] = [];
   let companyName: any = [];
-  let companyStatus: string[] = [];
-  let description: string[] = [];
-  let slug: string[] = [];
-  let requirements: string[] | string;
-  let date: string[] | string;
   let url: string = `${BASE}/perusahaan?page=${page}`;
 
   try {
@@ -60,38 +46,76 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
     const $ = cheerio.load(getData.data);
 
     // get company name and slug
-    let test = $("div.company-desc>a").each(function (
-      index: number,
-      element: any
-    ) {
-      slug.push($(this).attr("href"));
-      companyName.push($(this).text().replace(/\s\s+/gm, ""));
+    $("div.company-desc>a").each(function (index: number, element: any) {
+      arrResult[index] = {
+        image: "",
+        type: "",
+        jumlahLowongan: 0,
+        companyName: $(this).text().replace(/\s\s+/gm, ""),
+        companyStatus: "",
+        field: "",
+        description: "",
+        location: "",
+        website: "",
+        slug: $(this).attr("href").split("/")[4],
+      };
     });
-    
+
+    // get image
+    $("div.thumb>img").each((index, element) => {
+      arrResult[index] = {
+        ...arrResult[index],
+        image: $(element).attr("src"),
+      };
+    });
+
     // get company status
-    $("div[class=\"badge badge-light\"]").each(function (
+    $('div[class="badge badge-light"]').each(function (
       index: number,
       element: any
     ) {
-      jumlahLowongan.push(parseInt($(this).next().find("h2").text()));
-      companyStatus.push($(this).text().replace(/\s\s+/gm, ""));
+      arrResult[index] = {
+        ...arrResult[index],
+        jumlahLowongan: parseInt($(this).next().find("h2").text()),
+        companyStatus: $(this).text().trim(),
+      };
     });
 
+    // get description
+    $("div.company-profile")
+      .find("p")
+      .map(function (index: number, element: any) {
+        arrResult[index] = {
+          ...arrResult[index],
+          description: $(this).text().trim(),
+        };
+      });
 
-    description = $("div.company-profile").find("p").map(function (
-      index: number,
-      element: any
-    ) {
-      return $(this).text().replace(/\s\s+/gm, " ");
-    }).toArray();
-    
-    arrResult = {
-      description,
-      jumlahLowongan,
-      slug,
-      companyName,
-      companyStatus,
-    };
+    let tmp: string;
+    // get desc list
+    $("ul.desc-list").each((i, element) => {
+      $(element)
+        .children()
+        .each((j, el) => {
+          tmp = $(el).last().text().trim();
+          if (j === 0) {
+            arrResult[i] = {
+              ...arrResult[i],
+              field: tmp,
+            };
+          } else if (j === 1) {
+            arrResult[i] = {
+              ...arrResult[i],
+              location: tmp,
+            };
+          } else if (j === 2) {
+            arrResult[i] = {
+              ...arrResult[i],
+              website: tmp,
+            };
+          }
+        });
+    });
 
     if (arrResult.length === 0) {
       res.status(404).json({ error: "No data found!" });
