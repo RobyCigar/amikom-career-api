@@ -3,12 +3,14 @@ import cheerio from "cheerio";
 import axios from "axios";
 import config from "../../../utils/config";
 
+
 export default async function GET(req: NextApiRequest, res: NextApiResponse) {
   const { slug } = req.query;
   let arrResult: any = [];
   let requirements: any = [];
   let about: any = [];
   let jurusan: string = "";
+  let shit:any;
 
   const url = `${config.BASE}detail/lowongan/${slug}`;
 
